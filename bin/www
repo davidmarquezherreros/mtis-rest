@@ -1,0 +1,112 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+var app = require('../app');
+var debug = require('debug')('express-sequelize');
+var http = require('http');
+var models = require('../models');
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+var port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
+  /**
+   * Create HTTP server.
+   */
+var server = http.createServer(app);
+
+models.sequelize.sync({force: true}).then(function() {
+  /**
+   * Listen on provided port, on all network interfaces.
+   */
+   // Metemos datos de prueba en la base de datos
+ 	models.Stock.bulkCreate([
+ 		{id: 1, nombre:'Cuero', descripcion:'', cantidad: 300, reservada: 0},
+ 		{id: 2, nombre:'Tela', descripcion:'', cantidad: 300, reservada: 0},
+ 		{id: 3, nombre:'Piel sintetica', descripcion:'', cantidad: 300, reservada: 0},
+ 		{id: 4, nombre:'Suela sintetica', descripcion:'', cantidad: 300, reservada: 0},
+    {id: 5, nombre:'Caja de carton', descripcion:'', cantidad: 300, reservada: 0},
+    {id: 6, nombre:'Pegamento', descripcion:'', cantidad: 300, reservada: 0},
+    {id: 7, nombre:'Cordones', descripcion:'', cantidad: 300, reservada: 0},
+    {id: 8, nombre:'Plantillas', descripcion:'', cantidad: 300, reservada: 0},
+    {id: 9, nombre:'Contrafuerte', descripcion:'', cantidad: 300, reservada: 0},
+    {id: 10, nombre:'Forro', descripcion:'', cantidad: 300, reservada: 0}
+ 	]).then(function(){
+    models.Orden.bulkCreate([
+      {id: 1, modelo:'Modelo 1', cantidad: 10, estado: "EN PROCESO"},
+      {id: 2, modelo:'Modelo 2', cantidad: 20, estado: "EN PRODUCCION"},
+      {id: 3, modelo:'Modelo 3', cantidad: 30, estado: "EN ENVIO"},
+      {id: 4, modelo:'Modelo 4', cantidad: 40, estado: "FINALIZADA"}
+    ]);
+  });
+  server.listen(port, function() {
+    debug('Express server listening on port ' + server.address().port);
+  });
+  server.on('error', onError);
+  server.on('listening', onListening);
+});
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  var addr = server.address();
+  var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+}
