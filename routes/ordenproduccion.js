@@ -45,5 +45,25 @@ router.post('/', function(pet, resp, next) {
   }
 });
 
+/* PUT */
+router.put('/:id', function(pet, resp, next) {
+  var nuevo = pet.body;
+  if(isNaN(pet.params.id) && nuevo.estado==undefined){
+    req.status(400).send('Bad request').end();
+  }
+  else{
+    models.Orden.findById(pet.params.id).then(function(orden){
+      if(orden){
+        models.Orden.update({estado: nuevo.estado},{where : {id:pet.params.id}})
+          .then(function(orden){
+            resp.status(200).send().end();
+          });
+      }
+      else{
+        resp.status(404).send("No se ha encontrado la orden con id: "+pet.params.id).end();
+      }
+    });
+  }
+});
 
 module.exports = router;
