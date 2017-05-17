@@ -30,6 +30,7 @@ else{
 router.post('/:id/actualizar', function(pet, resp, next) {
   var nuevo = pet.body;
   if(isNaN(nuevo.cantidad)==false && isNaN(pet.params.id)==false){ // Mirar todos los campos
+    if(nuevo.cantidad instanceof String) nuevo.cantidad = parseInt(nuevo.cantidad);
     var negative = false;
     if(nuevo.cantidad < 0){
       negative = true;
@@ -37,10 +38,11 @@ router.post('/:id/actualizar', function(pet, resp, next) {
     models.Stock.findById(pet.params.id).then(function(stock){
       if(stock){
         if(negative ==true){
-          if((nuevo.cantidad + stock.cantidad) >= 0){
+          var auxcantidad = parseInt(nuevo.cantidad) + parseInt(stock.cantidad);
+          if(auxcantidad >= 0){
             models.Stock.update(
               {
-                cantidad: stock.cantidad + nuevo.cantidad
+                cantidad: auxcantidad
               },
               {
                 where: {id:pet.params.id}
@@ -50,7 +52,7 @@ router.post('/:id/actualizar', function(pet, resp, next) {
               });
           }
           else{
-            resp.status(304).send().end();
+            resp.status(304).send("No tenemos suficiente stock").end();
           }
         }else{
           models.Stock.update(
