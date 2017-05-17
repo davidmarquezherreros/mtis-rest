@@ -29,6 +29,7 @@ else{
 /* POST */
 router.post('/:id/actualizar', function(pet, resp, next) {
   var nuevo = pet.body;
+  var item;
   if(isNaN(nuevo.cantidad)==false && isNaN(pet.params.id)==false){ // Mirar todos los campos
     if(nuevo.cantidad instanceof String) nuevo.cantidad = parseInt(nuevo.cantidad);
     var negative = false;
@@ -36,6 +37,7 @@ router.post('/:id/actualizar', function(pet, resp, next) {
       negative = true;
     }
     models.Stock.findById(pet.params.id).then(function(stock){
+      item = stock;
       if(stock){
         if(negative ==true){
           var auxcantidad = parseInt(nuevo.cantidad) + parseInt(stock.cantidad);
@@ -48,11 +50,11 @@ router.post('/:id/actualizar', function(pet, resp, next) {
                 where: {id:pet.params.id}
               }).then(function(stock){
                 resp.header('Location','http://localhost:3000/stock/'+stock.id);
-                resp.status(204).send(stock).end();
+                resp.status(200).send(item).end();
               });
           }
           else{
-            resp.status(304).send("No tenemos suficiente stock").end();
+            resp.status(200).send("No tenemos suficiente stock").end();
           }
         }else{
           var auxcantidad = parseInt(nuevo.cantidad) + parseInt(stock.cantidad);
@@ -63,8 +65,8 @@ router.post('/:id/actualizar', function(pet, resp, next) {
             {
               where: {id:pet.params.id}
             }).then(function(stock){
-              resp.header('Location','http://localhost:3000/stock/'+stock.id);
-              resp.status(204).send(stock).end();
+              resp.header('Location','http://localhost:3000/stock/'+item.id);
+              resp.status(200).send(item).end();
             });
         }
       }
@@ -80,24 +82,26 @@ router.post('/:id/actualizar', function(pet, resp, next) {
 /* POST */
 router.post('/:id/reservar', function(pet, resp, next) {
   var nuevo = pet.body;
+  var item;
   if(isNaN(nuevo.cantidad)==false && isNaN(pet.params.id)==false){ // Mirar todos los campos
     models.Stock.findById(pet.params.id).then(function(stock){
+      item = stock;
       if(stock){
-          if(stock.cantidad >= stock.cantidad){
+          if(stock.cantidad >= nuevo.cantidad){
             models.Stock.update(
               {
-                cantidad: stock.cantidad - nuevo.cantidad,
-                reservada: stock.reservada + nuevo.cantidad
+                cantidad: parseInt(stock.cantidad) - parseInt(nuevo.cantidad),
+                reservada: parseInt(stock.reservada) + parseInt(nuevo.cantidad)
               },
               {
                 where: {id:pet.params.id}
               }).then(function(stock){
                 resp.header('Location','http://localhost:3000/stock/'+stock.id);
-                resp.status(204).send(stock).end();
+                resp.status(200).send(item).end();
               });
         }
         else{
-          resp.status(304).send("Not enough stockage").end();
+          resp.status(200).send("No tenemos suficiente stock").end();
         }
       }
       else{
