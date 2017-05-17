@@ -20,7 +20,7 @@ app.set('port', port);
    */
 var server = http.createServer(app);
 
-models.sequelize.sync({force: true}).then(function() {
+models.sequelize.sync({force: false}).then(function() {
   /**
    * Listen on provided port, on all network interfaces.
    */
@@ -38,10 +38,12 @@ models.sequelize.sync({force: true}).then(function() {
     {id: 10, nombre:'Forro', descripcion:'', cantidad: 300, reservada: 0}
  	]).then(function(){
     models.Orden.bulkCreate([
-      {id: 1, modelo:'Modelo 1', cantidad: 10, estado: "EN PROCESO"},
-      {id: 2, modelo:'Modelo 2', cantidad: 20, estado: "EN PRODUCCION"},
-      {id: 3, modelo:'Modelo 3', cantidad: 30, estado: "EN ENVIO"},
-      {id: 4, modelo:'Modelo 4', cantidad: 40, estado: "FINALIZADA"}
+      {id: 1, nombre: "Orden de zapatos 1", modelo:'Modelo 1', cantidad: 10, estado: "EN PROCESO"},
+      {id: 2, nombre: "Orden de zapatos 2", modelo:'Modelo 2', cantidad: 20, estado: "EN PRODUCCION"},
+      {id: 3, nombre: "Orden de zapatos 3", modelo:'Modelo 3', cantidad: 30, estado: "ANULADA"},
+      {id: 4, nombre: "Orden de zapatos 4", modelo:'Modelo 4', cantidad: 40, estado: "FINALIZADA"},
+      {id: 5, nombre: "Orden de zapatos 5", modelo:'Modelo 1', cantidad: 275, estado: "FINALIZADA"},
+      {id: 6, nombre: "Orden de zapatos 6", modelo:'Modelo 2', cantidad: 75, estado: "ANULADA"}
     ]);
   });
   server.listen(port, function() {
