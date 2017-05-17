@@ -55,9 +55,10 @@ router.post('/:id/actualizar', function(pet, resp, next) {
             resp.status(304).send("No tenemos suficiente stock").end();
           }
         }else{
+          var auxcantidad = parseInt(nuevo.cantidad) + parseInt(stock.cantidad);
           models.Stock.update(
             {
-              cantidad: stock.cantidad + nuevo.cantidad
+              cantidad: auxcantidad
             },
             {
               where: {id:pet.params.id}
