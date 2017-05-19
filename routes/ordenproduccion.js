@@ -29,16 +29,33 @@ else{
 /* POST */
 router.post('/', function(pet, resp, next) {
   var nuevo = pet.body;
+  var items = [];
   if(nuevo.nombre && nuevo.modelo && isNaN(nuevo.cantidad)==false && nuevo.estado){ // Mirar todos los campos
-    models.Orden.create({
-      nombre: nuevo.nombre,
-      modelo: nuevo.modelo,
-      cantidad: nuevo.cantidad,
-      estado: nuevo.estado
-    }).then(function(orden){
-      resp.header('Location','http://localhost:3000/ordenproduccion/'+orden.id);
-      resp.status(201).send(orden).end();
-    })
+    models.Stock.findAll().then(function(stock) {
+
+      var esta = false;
+      for(i = 0; i < stock.length && esta==false; i++){
+        if(stock[i].nombre == nuevo.modelo){
+          esta = true;
+          console.error(esta);
+        }
+        console.error(esta);
+      }
+      if(esta==true){
+        models.Orden.create({
+          nombre: nuevo.nombre,
+          modelo: nuevo.modelo,
+          cantidad: nuevo.cantidad,
+          estado: nuevo.estado
+        }).then(function(orden){
+          resp.header('Location','http://localhost:3000/ordenproduccion/'+orden.id);
+          resp.status(201).send(orden).end();
+        })
+      }
+      else{
+        resp.status(200).send('No existe ese modelo').end();
+      }
+    });
   }
   else{
     resp.status(400).send('Bad request').end();
