@@ -15,9 +15,16 @@ router.get('/:id', function(req, res, next) {
   req.status(400).send('Bad request').end();
 }
 else{
-  models.Stock.findById(req.params.id).then(function(stock){
-    if(stock){
-      res.status(200).send(stock).end();
+  models.Orden.findById(req.params.id).then(function(orden){
+    if(orden){
+      models.Stock.findOne({where:{nombre:orden.modelo}}).then(function(stock){
+        if(stock){
+          res.status(200).send(stock.id+"#"+stock.cantidad+"@"+orden.cantidad).end();
+        }
+        else{
+          res.status(404).send("Resource not found").end();
+        }
+      });
     }
     else{
       res.status(404).send('Resource not found').end();
