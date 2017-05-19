@@ -20,29 +20,24 @@ app.set('port', port);
    */
 var server = http.createServer(app);
 
-models.sequelize.sync({force: false}).then(function() {
+models.sequelize.sync({force: true}).then(function() {
   /**
    * Listen on provided port, on all network interfaces.
    */
    // Metemos datos de prueba en la base de datos
  	models.Stock.bulkCreate([
- 		{id: 1, nombre:'Cuero', descripcion:'', cantidad: 300, reservada: 0},
- 		{id: 2, nombre:'Tela', descripcion:'', cantidad: 300, reservada: 0},
- 		{id: 3, nombre:'Piel sintetica', descripcion:'', cantidad: 300, reservada: 0},
- 		{id: 4, nombre:'Suela sintetica', descripcion:'', cantidad: 300, reservada: 0},
-    {id: 5, nombre:'Caja de carton', descripcion:'', cantidad: 300, reservada: 0},
-    {id: 6, nombre:'Pegamento', descripcion:'', cantidad: 300, reservada: 0},
-    {id: 7, nombre:'Cordones', descripcion:'', cantidad: 300, reservada: 0},
-    {id: 8, nombre:'Plantillas', descripcion:'', cantidad: 300, reservada: 0},
-    {id: 9, nombre:'Contrafuerte', descripcion:'', cantidad: 300, reservada: 0},
-    {id: 10, nombre:'Forro', descripcion:'', cantidad: 300, reservada: 0}
+ 		{id: 1, nombre:'Modelo 1', descripcion:'Zapatillas simple con contrafuerte', cantidad: 335, reservada: 0},
+ 		{id: 2, nombre:'Modelo 2', descripcion:'Zapatillas de cuero', cantidad: 275, reservada: 0},
+ 		{id: 3, nombre:'Modelo 3', descripcion:'Zapatillas de tela', cantidad: 35, reservada: 0},
+ 		{id: 4, nombre:'Modelo 4', descripcion:'Zapatillas de ante', cantidad: 245, reservada: 0},
+    {id: 5, nombre:'Modelo 5', descripcion:'Chanclas', cantidad: 0, reservada: 0}
  	]).then(function(){
     models.Orden.bulkCreate([
       {id: 1, nombre: "Orden de zapatos 1", modelo:'Modelo 1', cantidad: 10, estado: "EN PROCESO"},
       {id: 2, nombre: "Orden de zapatos 2", modelo:'Modelo 2', cantidad: 20, estado: "EN PRODUCCION"},
       {id: 3, nombre: "Orden de zapatos 3", modelo:'Modelo 3', cantidad: 30, estado: "ANULADA"},
       {id: 4, nombre: "Orden de zapatos 4", modelo:'Modelo 4', cantidad: 40, estado: "FINALIZADA"},
-      {id: 5, nombre: "Orden de zapatos 5", modelo:'Modelo 1', cantidad: 275, estado: "FINALIZADA"},
+      {id: 5, nombre: "Orden de zapatos 5", modelo:'Modelo 5', cantidad: 275, estado: "FINALIZADA"},
       {id: 6, nombre: "Orden de zapatos 6", modelo:'Modelo 2', cantidad: 75, estado: "ANULADA"}
     ]);
   });
