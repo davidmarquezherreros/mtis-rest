@@ -30,7 +30,10 @@ models.sequelize.sync({force: false}).then(function() {
  		{id: 2, nombre:'Modelo 2', descripcion:'Zapatillas de cuero', cantidad: 275, reservada: 0},
  		{id: 3, nombre:'Modelo 3', descripcion:'Zapatillas de tela', cantidad: 35, reservada: 0},
  		{id: 4, nombre:'Modelo 4', descripcion:'Zapatillas de ante', cantidad: 245, reservada: 0},
-    {id: 5, nombre:'Modelo 5', descripcion:'Chanclas', cantidad: 0, reservada: 0}
+    {id: 5, nombre:'Modelo 5', descripcion:'Chanclas', cantidad: 0, reservada: 0},
+    {id: 6, nombre:'111', descripcion:'Zapatillas 111', cantidad: 0, reservada: 0},
+    {id: 7, nombre:'222', descripcion:'Zapatillas 222', cantidad: 0, reservada: 0},
+    {id: 8, nombre:'333', descripcion:'Zapatillas 333', cantidad: 0, reservada: 0}
  	]).then(function(){
     models.Orden.bulkCreate([
       {id: 1, nombre: "Orden de zapatos 1", modelo:'Modelo 1', cantidad: 10, estado: "EN PROCESO"},
